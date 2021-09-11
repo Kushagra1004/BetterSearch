@@ -111,7 +111,12 @@ namespace Search
         public FileModel(string path)
         {
             FilePath = path;
+            int dirIndex = FilePath.LastIndexOf(@"\");
+            FileName = FilePath[(dirIndex + 1)..];
         }
         public string FilePath { get; set; }
+
+        public string FileName { get; set; }
+
     }
 }
