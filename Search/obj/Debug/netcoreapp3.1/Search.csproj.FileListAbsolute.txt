@@ -18,3 +18,23 @@ C:\Users\Kushagra Sharma\source\repos\Search\Search\obj\Debug\netcoreapp3.1\Sear
 C:\Users\Kushagra Sharma\source\repos\Search\Search\obj\Debug\netcoreapp3.1\Search.dll
 C:\Users\Kushagra Sharma\source\repos\Search\Search\obj\Debug\netcoreapp3.1\Search.pdb
 C:\Users\Kushagra Sharma\source\repos\Search\Search\obj\Debug\netcoreapp3.1\Search.genruntimeconfig.cache
+C:\Kushagra\GitHub\BetterSearch\Search\bin\Debug\netcoreapp3.1\Search.exe
+C:\Kushagra\GitHub\BetterSearch\Search\bin\Debug\netcoreapp3.1\Search.deps.json
+C:\Kushagra\GitHub\BetterSearch\Search\bin\Debug\netcoreapp3.1\Search.runtimeconfig.json
+C:\Kushagra\GitHub\BetterSearch\Search\bin\Debug\netcoreapp3.1\Search.runtimeconfig.dev.json
+C:\Kushagra\GitHub\BetterSearch\Search\bin\Debug\netcoreapp3.1\Search.dll
+C:\Kushagra\GitHub\BetterSearch\Search\bin\Debug\netcoreapp3.1\Search.pdb
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.csproj.AssemblyReference.cache
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\App.g.cs
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search_MarkupCompile.cache
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search_MarkupCompile.lref
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\MainWindow.baml
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.g.resources
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.GeneratedMSBuildEditorConfig.editorconfig
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.AssemblyInfoInputs.cache
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.AssemblyInfo.cs
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.csproj.CoreCompileInputs.cache
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.dll
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.pdb
+C:\Kushagra\GitHub\BetterSearch\Search\obj\Debug\netcoreapp3.1\Search.genruntimeconfig.cache

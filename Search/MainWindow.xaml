@@ -9,7 +9,7 @@
     <Grid x:Name="SeacrhLabel" HorizontalAlignment="Left" VerticalAlignment="Top" >
         <Label Content="Search Text"  Height="25" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
         <TextBox x:Name="SearchText" Margin="100,0,0,0"  Width="700" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
-        <Button x:Name="SearchBtn" Content="Search Files" VerticalAlignment="Top" HorizontalAlignment="Right"  Height="20" Click="SearchBtn_Click"/>
+        <Button x:Name="SearchBtn" Content="Search Files" VerticalAlignment="Top" HorizontalAlignment="Right"  Height="20" Click="SearchBtn_Click" Margin="0,0,10,0"/>
         <ListView x:Name="FileList" Height="510" Width="1000" Margin="0,10,0,0" MouseDoubleClick="GetSelectedPath_Click">
             <ListView.View>
                 <GridView >

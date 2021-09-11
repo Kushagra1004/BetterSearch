@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Kushagra Sharma\\source\\repos\\Search\\Search\\Search.csproj": {}
+    "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Kushagra Sharma\\source\\repos\\Search\\Search\\Search.csproj": {
+    "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Kushagra Sharma\\source\\repos\\Search\\Search\\Search.csproj",
+        "projectUniqueName": "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj",
         "projectName": "Search",
-        "projectPath": "C:\\Users\\Kushagra Sharma\\source\\repos\\Search\\Search\\Search.csproj",
+        "projectPath": "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj",
         "packagesPath": "C:\\Users\\Kushagra Sharma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Kushagra Sharma\\source\\repos\\Search\\Search\\obj\\",
+        "outputPath": "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
