@@ -5,19 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Search"
         mc:Ignorable="d"
-        Title="Search Files" Height="450" Width="800" >
+        Title="Search Files" Height="600" Width="1000" >
     <Grid x:Name="SeacrhLabel" HorizontalAlignment="Left" VerticalAlignment="Top" >
         <Label Content="Search Text"  Height="25" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
-        <TextBox x:Name="SearchText" Margin="100,0,0,0"  Width="500" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
+        <TextBox x:Name="SearchText" Margin="100,0,0,0"  Width="700" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
         <Button x:Name="SearchBtn" Content="Search Files" VerticalAlignment="Top" HorizontalAlignment="Right"  Height="20" Click="SearchBtn_Click"/>
-        <ListView x:Name="FileList" Height="360" Width="800" Margin="0,10,0,0" MouseDoubleClick="GetSelectedPath_Click">
+        <ListView x:Name="FileList" Height="510" Width="1000" Margin="0,10,0,0" MouseDoubleClick="GetSelectedPath_Click">
             <ListView.View>
                 <GridView >
-                    <GridViewColumn Width="800" Header="FilePath" DisplayMemberBinding="{Binding FilePath}" />
+                    <GridViewColumn Width="1000" Header="FilePath" DisplayMemberBinding="{Binding FilePath}" />
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Orientation="Horizontal" Grid.Column="4" Background="GhostWhite" Margin="0,390,0,0" VerticalAlignment="Bottom">
+        <StackPanel Orientation="Horizontal" Grid.Column="4" Background="GhostWhite" Margin="0,540,0,0" VerticalAlignment="Bottom">
             <TextBlock x:Name="lblTotalPC" FontWeight="Bold" >Total Files Scanned: </TextBlock>
             <TextBlock x:Name="lblTotalFilesFound" FontWeight="Bold" Margin="10,0,0,0" ></TextBlock>
             <TextBlock x:Name="lblTotalFilter" FontWeight="Bold" Margin="10,0,0,0" ></TextBlock>
