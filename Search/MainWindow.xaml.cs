@@ -24,14 +24,16 @@ namespace Search
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<string> allfolders;
+        //public List<string> allfolders;
+        public List<FileInfo> allfiles;
 
         public MainWindow()
         {
             InitializeComponent();
             var startTime = DateTime.Now.Ticks;
-            allfolders = new List<string>();
-            foreach (var drive in DriveInfo.GetDrives())
+            List<string> allfolders = new List<string>();
+            allfiles = new List<FileInfo>();
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 try
                 {
@@ -40,6 +42,13 @@ namespace Search
                         IgnoreInaccessible = true,
                         RecurseSubdirectories = true
                     }).ToList());
+
+                    foreach (var file in allfolders)
+                    {
+                        allfiles.Add(new FileInfo(file));
+                        // Do something with the Folder or just add them to a list via nameoflist.add();
+                    }
+
                 }
                 catch (Exception e)
                 {
@@ -68,23 +77,25 @@ namespace Search
         {
             var startTime = DateTime.Now.Ticks;
 
-            IEnumerable<string> listFiles = allfolders.Where(x => x.Contains(SearchText.Text));
+            IEnumerable<FileInfo> listFiles1 = allfiles.Where(x => x.FullName.Contains(SearchText.Text));
+
+            //IEnumerable<string> listFiles = allfolders.Where(x => x.Contains(SearchText.Text));
             var endTime = DateTime.Now.Ticks;
 
-            List<FileModel> files = listFiles.Select(x => new FileModel(x)).ToList();
+            //List<FileModel> files = listFiles.Select(x => new FileModel(x)).ToList();
 
-            FileList.ItemsSource = files;
+            FileList.ItemsSource = listFiles1;
             Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
             Debug.WriteLine("Time Taken to filter ticks Diff: " + (endTime - startTime));
 
             lblTotalFilter.Text = "Total files found: ";
-            lblTotalFilesFoundFilter.Text = files.Count.ToString();
+            lblTotalFilesFoundFilter.Text = listFiles1.Count().ToString();
             GC.Collect();
         }
 
         private void GetSelectedPath_Click(object sender, MouseButtonEventArgs e)
         {
-            string filepath = ((FileModel)FileList.SelectedItems[0]).FilePath;
+            string filepath = ((FileInfo)FileList.SelectedItems[0]).FullName;
             int dirIndex = filepath.LastIndexOf(@"\");
             string directoryPath = filepath.Substring(0, dirIndex);
             try
@@ -97,26 +108,11 @@ namespace Search
                 {
                     _ = Process.Start("explorer.exe", directoryPath);
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     _ = MessageBox.Show("Unable to open path - " + directoryPath);
                 }
             }
         }
-
-
-    }
-    public class FileModel
-    {
-        public FileModel(string path)
-        {
-            FilePath = path;
-            int dirIndex = FilePath.LastIndexOf(@"\");
-            FileName = FilePath[(dirIndex + 1)..];
-        }
-        public string FilePath { get; set; }
-
-        public string FileName { get; set; }
-
     }
 }
