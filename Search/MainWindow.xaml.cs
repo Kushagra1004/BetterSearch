@@ -73,7 +73,9 @@ namespace Search
                 Dispatcher.Invoke(() =>
                 {
                     statusLabel.Text = allfiles.Count.ToString() + " Objects";
-                    FileList.ItemsSource = allfiles;
+                    FileListName.ItemsSource = allfiles;
+                    //SearchBtn.IsEnabled = true;
+                    SearchText.IsEnabled = true;
                 });
             });
         }
@@ -89,31 +91,56 @@ namespace Search
             FindText();
         }
 
-        private void FindText()
+        private void FindText(bool searchInPath = false)
         {
             var startTime = DateTime.Now.Ticks;
+            IEnumerable<FileInfo> listFiles = new List<FileInfo>();
+            if (searchInPath)
+            {
+                listFiles = allfiles.Where(x => x.FullName.Contains(SearchText.Text));
+                FileListPath.ItemsSource = listFiles;
+            }
+            else
+            {
+                listFiles = allfiles.Where(x => x.Name.Contains(SearchText.Text));
+                FileListName.ItemsSource = listFiles;
+            }
 
-            IEnumerable<FileInfo> listFiles1 = allfiles.Where(x => x.FullName.Contains(SearchText.Text));
 
-            //IEnumerable<string> listFiles = allfolders.Where(x => x.Contains(SearchText.Text));
             var endTime = DateTime.Now.Ticks;
-
-            //List<FileModel> files = listFiles.Select(x => new FileModel(x)).ToList();
-
-            FileList.ItemsSource = listFiles1;
+            
             Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
             Debug.WriteLine("Time Taken to filter ticks Diff: " + (endTime - startTime));
 
             lblTotalFilter.Text = "Total files found: ";
-            lblTotalFilesFoundFilter.Text = listFiles1.Count().ToString();
+            lblTotalFilesFoundFilter.Text = listFiles.Count().ToString();
             GC.Collect();
         }
 
+        private void OnTabChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Name.IsSelected)
+            {
+                FindText();
+            }
+            else if (Path.IsSelected)
+            {
+                FindText(true);
+            }
+        }
 
 
         private void GetSelectedPath_Click(object sender, MouseButtonEventArgs e)
         {
-            string filepath = ((FileInfo)FileList.SelectedItems[0]).FullName;
+            string filepath;
+            if (Name.IsSelected)
+            {
+                filepath = ((FileInfo)FileListName.SelectedItems[0]).FullName;
+            }
+            else
+            {
+                filepath = ((FileInfo)FileListPath.SelectedItems[0]).FullName;
+            }
             int dirIndex = filepath.LastIndexOf(@"\");
             string directoryPath = filepath.Substring(0, dirIndex);
             try
@@ -135,7 +162,5 @@ namespace Search
 
        
     }
-
-
     
 }
