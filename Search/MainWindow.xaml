@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Search"
         mc:Ignorable="d"
-        Title="Search Files" Height="600" Width="1000" >
+        Title="Search Files" Height="600" Width="1000"
+        >
     <Window.Resources>
         <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
             <Setter Property="FontFamily" Value="Arial"/>
@@ -71,9 +72,9 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid x:Name="SeacrhLabel" HorizontalAlignment="Left" VerticalAlignment="Top" >
+    <Grid x:Name="SeacrhLabel" HorizontalAlignment="Left" VerticalAlignment="Top">
         <Label Content="Search Text"  Height="25" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
-        <TextBox x:Name="SearchText" Margin="100,0,0,0"  Width="700" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
+        <TextBox x:Name="SearchText" Margin="100,0,0,0"  Width="700" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="SearchText_TextChanged" ></TextBox>
         <Button x:Name="SearchBtn" Content="Search Files" VerticalAlignment="Top" HorizontalAlignment="Right"  Height="20" Width="100" Click="SearchBtn_Click" Margin="0,0,10,0" Style="{DynamicResource RoundCorner}"  ></Button>
         <ListView x:Name="FileList" Height="510" Width="1000" Margin="0,10,0,0" MouseDoubleClick="GetSelectedPath_Click">
             <ListView.View>
@@ -85,7 +86,7 @@
             </ListView.View>
         </ListView>
         <StackPanel Orientation="Horizontal" Grid.Column="4" Background="GhostWhite" Margin="0,540,0,0" VerticalAlignment="Bottom">
-            <TextBlock x:Name="lblTotalPC" FontWeight="Bold" >Total Files Scanned: </TextBlock>
+            <TextBlock x:Name="statusLabel" FontWeight="Bold" >Scanning: </TextBlock>
             <TextBlock x:Name="lblTotalFilesFound" FontWeight="Bold" Margin="10,0,0,0" ></TextBlock>
             <TextBlock x:Name="lblTotalFilter" FontWeight="Bold" Margin="10,0,0,0" ></TextBlock>
             <TextBlock x:Name="lblTotalFilesFoundFilter" FontWeight="Bold" Margin="10,0,0,0"></TextBlock>

@@ -1,32 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj": {}
+    "C:\\Users\\som\\Documents\\github\\BetterSearch\\Search\\Search.csproj": {}
   },
   "projects": {
-    "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj": {
+    "C:\\Users\\som\\Documents\\github\\BetterSearch\\Search\\Search.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj",
+        "projectUniqueName": "C:\\Users\\som\\Documents\\github\\BetterSearch\\Search\\Search.csproj",
         "projectName": "Search",
-        "projectPath": "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\Search.csproj",
-        "packagesPath": "C:\\Users\\Kushagra Sharma\\.nuget\\packages\\",
-        "outputPath": "C:\\Kushagra\\GitHub\\BetterSearch\\Search\\obj\\",
+        "projectPath": "C:\\Users\\som\\Documents\\github\\BetterSearch\\Search\\Search.csproj",
+        "packagesPath": "C:\\Users\\som\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\som\\Documents\\github\\BetterSearch\\Search\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Kushagra Sharma\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\som\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://nexus.cogitate.us/repository/nuget-hosted/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
