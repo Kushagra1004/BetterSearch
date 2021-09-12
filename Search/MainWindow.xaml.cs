@@ -91,11 +91,12 @@ namespace Search
             FindText();
         }
 
-        private void FindText(bool searchInPath = false)
+        private void FindText()
         {
             var startTime = DateTime.Now.Ticks;
             IEnumerable<FileInfo> listFiles = new List<FileInfo>();
-            if (searchInPath)
+
+            if (Path.IsSelected)
             {
                 listFiles = allfiles.Where(x => x.FullName.Contains(SearchText.Text));
                 FileListPath.ItemsSource = listFiles;
@@ -119,14 +120,7 @@ namespace Search
 
         private void OnTabChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Name.IsSelected)
-            {
-                FindText();
-            }
-            else if (Path.IsSelected)
-            {
-                FindText(true);
-            }
+            FindText();
         }
 
 
