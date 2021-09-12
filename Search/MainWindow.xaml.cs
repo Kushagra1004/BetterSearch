@@ -30,50 +30,66 @@ namespace Search
         public MainWindow()
         {
             InitializeComponent();
-            var startTime = DateTime.Now.Ticks;
-            List<string> allfolders = new List<string>();
-            allfiles = new List<FileInfo>();
+            ScanDirectoriesAsync();
+        }
+
+        private List<FileInfo> GetFiles()
+        {
+            
+            List<FileInfo> _allFiles = new List<FileInfo>();
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
+                var startTime = DateTime.Now.Ticks;
+                List<FileInfo> _currentDirFiles = new List<FileInfo>();
                 try
                 {
-                    allfolders.AddRange(Directory.EnumerateFiles(drive.Name, "*", new EnumerationOptions
+                    DirectoryInfo di = new DirectoryInfo(drive.Name);
+                    Debug.WriteLine("Scanning: " + drive.Name);
+                    _currentDirFiles = di.EnumerateFiles("*", new EnumerationOptions
                     {
                         IgnoreInaccessible = true,
                         RecurseSubdirectories = true
-                    }).ToList());
-
-                    foreach (var file in allfolders)
-                    {
-                        allfiles.Add(new FileInfo(file));
-                        // Do something with the Folder or just add them to a list via nameoflist.add();
-                    }
-
+                    }).ToList();
+                    _allFiles.AddRange(_currentDirFiles);
                 }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e);
                 }
+                var endTime = DateTime.Now.Ticks;
+                Debug.WriteLine("Scanned drive " + drive.Name + " with fileCount : " + _currentDirFiles.Count.ToString() + 
+                                " in ms " + ((endTime - startTime) / 10000) + "ms");
             }
-
-            var endTime = DateTime.Now.Ticks;
-            Debug.WriteLine("Time Taken to Init: " + ((endTime - startTime) / 10000) + "ms");
-            lblTotalFilesFound.Text = allfolders.Count.ToString();
-            GC.Collect();
-            //var arraylength = allfolders.Sum(x => x.Length);
-
-            //Debug.WriteLine("Total file character lengths: " + arraylength);
-            //long size = 0;
-            //object o = allfolders;
-            //using (Stream s = new MemoryStream())
-            //{
-            //    BinaryFormatter formatter = new BinaryFormatter();
-            //    formatter.Serialize(s, o);
-            //    size = s.Length;
-            //}
-            //Debug.WriteLine("Total files size: " + size);
+            _allFiles.Sort((x, y) => string.Compare(x.Name, y.Name));            
+            return _allFiles;
         }
-        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+
+        private async void ScanDirectoriesAsync()
+        {
+            allfiles = new List<FileInfo>();
+            await Task.Run(() =>
+            {
+                allfiles = GetFiles();
+                Dispatcher.Invoke(() =>
+                {
+                    statusLabel.Text = allfiles.Count.ToString() + " Objects";
+                    FileList.ItemsSource = allfiles;
+                });
+            });
+        }
+
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e)  // not required now
+        {
+            FindText();
+        }
+
+        private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FindText();
+        }
+
+        private void FindText()
         {
             var startTime = DateTime.Now.Ticks;
 
@@ -92,6 +108,8 @@ namespace Search
             lblTotalFilesFoundFilter.Text = listFiles1.Count().ToString();
             GC.Collect();
         }
+
+
 
         private void GetSelectedPath_Click(object sender, MouseButtonEventArgs e)
         {
@@ -114,5 +132,10 @@ namespace Search
                 }
             }
         }
+
+       
     }
+
+
+    
 }
