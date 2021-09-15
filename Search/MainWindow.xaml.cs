@@ -83,7 +83,9 @@ namespace Search
 
         private void GetSelectedPath_Click(object sender, MouseButtonEventArgs e)
         {
-            string filepath= ((FileInfo)FileListName.SelectedItems[0]).FullName;
+            ListView listViewToBePopulated = Path.IsSelected ? FileListPath: FileListName;
+
+            string filepath = ((FileInfo)listViewToBePopulated.SelectedItems[0]).FullName;
             
             try
             {
