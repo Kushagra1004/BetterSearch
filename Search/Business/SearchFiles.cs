@@ -21,6 +21,7 @@ namespace Search.Business
                 try
                 {
                     DirectoryInfo di = new DirectoryInfo(drive.Name);
+                    //DirectoryInfo di = new DirectoryInfo("E://");
                     Debug.WriteLine("Scanning: " + drive.Name);
                     _currentDirFiles = di.EnumerateFiles("*", new EnumerationOptions
                     {
@@ -36,6 +37,7 @@ namespace Search.Business
                 long endTime = DateTime.Now.Ticks;
                 Debug.WriteLine("Scanned drive " + drive.Name + " with fileCount : " + _currentDirFiles.Count.ToString() +
                                 " in ms " + ((endTime - startTime) / 10000) + "ms");
+                //break;
             }
             _allFiles.Sort((x, y) => string.Compare(x.Name, y.Name));
             return _allFiles;
@@ -45,7 +47,7 @@ namespace Search.Business
         {
             IEnumerable<FileInfo> listFiles = new List<FileInfo>();
 
-            listFiles = searchInPath ? allfiles.Where(x => x.FullName.Contains(searchText)) : allfiles.Where(x => x.Name.Contains(searchText));
+            listFiles = searchInPath ? allfiles.Where(x => x.FullName.ToLower().Contains(searchText.ToLower())) : allfiles.Where(x => x.Name.ToLower().Contains(searchText.ToLower()));
 
             return listFiles;
         }
