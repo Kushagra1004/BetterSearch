@@ -10,20 +10,20 @@ namespace Search.Business
     public class SearchFiles : ISearchFiles
     {
 
-        public List<FileInfo> GetFiles()
+        public List<FileSystemInfo> GetFiles()
         {
 
-            List<FileInfo> _allFiles = new List<FileInfo>();
+            List<FileSystemInfo> _allFiles = new List<FileSystemInfo>();
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 var startTime = DateTime.Now.Ticks;
-                List<FileInfo> _currentDirFiles = new List<FileInfo>();
+                List<FileSystemInfo> _currentDirFiles = new List<FileSystemInfo>();
                 try
                 {
                     DirectoryInfo di = new DirectoryInfo(drive.Name);
                     //DirectoryInfo di = new DirectoryInfo("E://");
                     Debug.WriteLine("Scanning: " + drive.Name);
-                    _currentDirFiles = di.EnumerateFiles("*", new EnumerationOptions
+                    _currentDirFiles = di.EnumerateFileSystemInfos("*", new EnumerationOptions
                     {
                         IgnoreInaccessible = true,
                         RecurseSubdirectories = true
@@ -35,19 +35,33 @@ namespace Search.Business
                     Debug.WriteLine(e);
                 }
                 long endTime = DateTime.Now.Ticks;
-                Debug.WriteLine("Scanned drive " + drive.Name + " with fileCount : " + _currentDirFiles.Count.ToString() +
+                string fileCount = _currentDirFiles.Where(x => x is FileInfo).Count().ToString();
+                string folderCount = _currentDirFiles.Where(x => x is DirectoryInfo).Count().ToString();
+                string totalCount = _currentDirFiles.Count().ToString();
+                Debug.WriteLine("Scanned drive " + drive.Name + 
+                                " with fileCount : " + fileCount +
+                                " with folderCount : " + folderCount +
+                                " with totalCount : " + totalCount +
                                 " in ms " + ((endTime - startTime) / 10000) + "ms");
                 //break;
             }
             _allFiles.Sort((x, y) => string.Compare(x.Name, y.Name));
+            string fileCount2 = _allFiles.Where(x => x is FileInfo).Count().ToString();
+            string folderCount2 = _allFiles.Where(x => x is DirectoryInfo).Count().ToString();
+            string totalCount2 = _allFiles.Count().ToString();
+            Debug.WriteLine("Scanned all " +
+                                " with fileCount : " + fileCount2 +
+                                " with folderCount : " + folderCount2 +
+                                " with totalCount : " + totalCount2);
             return _allFiles;
         }
 
-        public IEnumerable<FileInfo> FindText(List<FileInfo> allfiles, string searchText, bool searchInPath = false)
+        public IEnumerable<FileSystemInfo> FindText(List<FileSystemInfo> allfiles, string searchText, bool searchInPath = false)
         {
-            IEnumerable<FileInfo> listFiles = new List<FileInfo>();
+            IEnumerable<FileSystemInfo> listFiles = new List<FileSystemInfo>();
 
-            listFiles = searchInPath ? allfiles.Where(x => x.FullName.ToLower().Contains(searchText.ToLower())) : allfiles.Where(x => x.Name.ToLower().Contains(searchText.ToLower()));
+            listFiles = searchInPath ? allfiles.Where(x => x.FullName.ToLower().Contains(searchText.ToLower())) : 
+                                       allfiles.Where(x => x.Name.ToLower().Contains(searchText.ToLower()));
 
             return listFiles;
         }
