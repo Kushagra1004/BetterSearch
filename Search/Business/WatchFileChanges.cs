@@ -11,20 +11,31 @@ namespace Search.Business
     {
         public void WatchChanges(List<FileInfo> allfiles)
         {
-            FileSystemWatcher watcher = new FileSystemWatcher(@"C:\Publish")
+            foreach(var drive in DriveInfo.GetDrives())
             {
-                IncludeSubdirectories = true
-            };
-            watcher.Changed += new FileSystemEventHandler((s, e) => Watcher_Changed(s, e, allfiles));
-            watcher.Created += new FileSystemEventHandler((s, e) => Watcher_Created(s, e, allfiles));
-            watcher.Deleted += new FileSystemEventHandler((s, e) => Watcher_Deleted(s, e, allfiles));
-            watcher.Renamed += new RenamedEventHandler((s, e) => Watcher_Renamed(s, e, allfiles));
-            watcher.Filter = "*.*";
-            watcher.NotifyFilter = NotifyFilters.LastAccess |
-                         NotifyFilters.LastWrite |
-                         NotifyFilters.FileName |
-                         NotifyFilters.DirectoryName;
-            watcher.EnableRaisingEvents = true;
+                try
+                {
+                    FileSystemWatcher watcher = new FileSystemWatcher(drive.Name)
+                    {
+                        IncludeSubdirectories = true
+                    };
+                    watcher.Changed += new FileSystemEventHandler((s, e) => Watcher_Changed(s, e, allfiles));
+                    watcher.Created += new FileSystemEventHandler((s, e) => Watcher_Created(s, e, allfiles));
+                    watcher.Deleted += new FileSystemEventHandler((s, e) => Watcher_Deleted(s, e, allfiles));
+                    watcher.Renamed += new RenamedEventHandler((s, e) => Watcher_Renamed(s, e, allfiles));
+                    watcher.Filter = "*.*";
+                    watcher.NotifyFilter = NotifyFilters.LastAccess |
+                                 NotifyFilters.LastWrite |
+                                 NotifyFilters.FileName |
+                                 NotifyFilters.DirectoryName;
+                    watcher.EnableRaisingEvents = true;
+                }
+                catch(Exception ex)
+                {
+                    Utils.logText(ex.StackTrace);
+                }
+            }
+            
 
         }
         private void Watcher_Changed(object sender, FileSystemEventArgs e, List<FileInfo> allfiles)
