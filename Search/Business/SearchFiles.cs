@@ -76,5 +76,7 @@ namespace Search.Business
             }
             _ = Process.Start("explorer.exe", _pathToOpen);
         }
+
+        
     }
 }

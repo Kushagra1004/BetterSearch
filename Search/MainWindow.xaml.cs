@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Threading;
+using Search.Interface;
 
 namespace Search
 {
@@ -20,15 +21,21 @@ namespace Search
     {
         public List<FileSystemInfo> allfiles;
         public ISearchFiles searchFiles;
-        public String searchTextG;
-        public Boolean isPathSelectedG;
-        public Boolean isProcessed = true;
+        public IWatchFileChanges watcher;
+        public string searchTextG;
+        public bool isPathSelectedG;
+        public bool isProcessed = true;
         public MainWindow()
         {
             searchFiles = new SearchFiles();
+            watcher = new WatchFileChanges();
             InitializeComponent();
             ScanDirectoriesAsync();
+
+            //WatchChanges();
         }
+
+        
 
 
         private async void ScanDirectoriesAsync()
@@ -36,9 +43,9 @@ namespace Search
             allfiles = new List<FileSystemInfo>();
             await Task.Run(() =>
             {
-                Utils.logText("starting ScanDirectoriesAsync");
+                logText("starting ScanDirectoriesAsync");
                 allfiles = searchFiles.GetFiles();
-                Utils.logText("scanning done");
+                logText("scanning done");
                 Thread findText = new Thread(new ThreadStart(FindTextInThread));
                 findText.Start();
                 Dispatcher.Invoke(() =>
@@ -47,16 +54,13 @@ namespace Search
                     FileListName.ItemsSource = allfiles;
                     //SearchBtn.IsEnabled = true;
                     SearchText.IsEnabled = true;
+
+                    watcher.WatchChanges(allfiles);
                 });
             });
-            Utils.logText("end ScanDirectoriesAsync");
+            logText("end ScanDirectoriesAsync");
         }
 
-
-        private  void SearchBtn_Click(object sender, RoutedEventArgs e)  // not required now
-        {
-            FindText();
-        }
 
         private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -69,7 +73,7 @@ namespace Search
 
         private void FindTextInThread()
         {
-            Utils.logText("FindTextInThread initialize");
+            logText("FindTextInThread initialize");
             while (true)
             {
                 if (isProcessed)
@@ -77,40 +81,40 @@ namespace Search
                     Thread.Sleep(5);
                     continue;
                 }
-                String searchText_ = searchTextG;
-                Boolean isPathSelected_ = isPathSelectedG;
-                Utils.logText("FindTextAsync start");
-                Utils.logText("async search start");
+                string searchText_ = searchTextG;
+                bool isPathSelected_ = isPathSelectedG;
+                logText("FindTextAsync start");
+                logText("async search start");
                 long startTime = DateTime.Now.Ticks;
                 IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
                 long endTime = DateTime.Now.Ticks;
-                Utils.logText("async search end");
+                logText("async search end");
                 Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
                 Debug.WriteLine("Time Taken to filter ticks Diff: " + (endTime - startTime));
-                String totalItems_ = listFiles.Count().ToString();
+                string totalItems_ = listFiles.Count().ToString();
                 Dispatcher.Invoke(() =>
                 {
-                    Utils.logText("updating ui");
+                    logText("updating ui");
                     if (isPathSelected_)
                     {
                         FileListPath.ItemsSource = listFiles;
                     }
                     else
                     {
-                        Utils.logText("updating ui2");
+                        logText("updating ui2");
                         FileListName.ItemsSource = listFiles;
-                        Utils.logText("updating ui3");
+                        logText("updating ui3");
                     }
-                     lblTotalFilter.Text = "Total files found for " + searchText_ + ": ";
+                    lblTotalFilter.Text = "Total files found for " + searchText_ + ": ";
 
                     lblTotalFilesFoundFilter.Text = totalItems_; // totalItems_;
-                    Utils.logText("updating ui end for " + searchText_);
+                    logText("updating ui end for " + searchText_);
                 });
                 if (searchTextG == searchText_ && isPathSelectedG == isPathSelected_)
                 {
                     isProcessed = true; // rare race condition, fix later
                 }
-                Utils.logText("FindTextAsync end");
+                logText("FindTextAsync end");
             }
         }
 
@@ -143,7 +147,7 @@ namespace Search
 
         private void GetSelectedPath_Click(object sender, MouseButtonEventArgs e)
         {
-            ListView listViewToBePopulated = Path.IsSelected ? FileListPath: FileListName;
+            ListView listViewToBePopulated = Path.IsSelected ? FileListPath : FileListName;
 
             string filepath = ((FileSystemInfo)listViewToBePopulated.SelectedItems[0]).FullName;
             
@@ -156,7 +160,7 @@ namespace Search
                 _ = MessageBox.Show("Unable to open path - " + filepath);
             }
         }
-       
+
     }
-    
+
 }
