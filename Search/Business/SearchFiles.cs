@@ -16,7 +16,7 @@ namespace Search.Business
             List<FileInfo> _allFiles = new List<FileInfo>();
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                var startTime = DateTime.Now.Ticks;
+                long startTime = DateTime.Now.Ticks;
                 List<FileInfo> _currentDirFiles = new List<FileInfo>();
                 try
                 {
@@ -62,5 +62,7 @@ namespace Search.Business
             }
             _ = Process.Start("explorer.exe", _pathToOpen);
         }
+
+        
     }
 }
