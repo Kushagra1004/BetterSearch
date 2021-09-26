@@ -19,7 +19,7 @@ namespace Search
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<FileInfo> allfiles;
+        public List<FileSystemInfo> allfiles;
         public ISearchFiles searchFiles;
         public IWatchFileChanges watcher;
         public string searchTextG;
@@ -40,7 +40,7 @@ namespace Search
 
         private async void ScanDirectoriesAsync()
         {
-            allfiles = new List<FileInfo>();
+            allfiles = new List<FileSystemInfo>();
             await Task.Run(() =>
             {
                 logText("starting ScanDirectoriesAsync");
@@ -86,7 +86,7 @@ namespace Search
                 logText("FindTextAsync start");
                 logText("async search start");
                 long startTime = DateTime.Now.Ticks;
-                IEnumerable<FileInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
+                IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
                 long endTime = DateTime.Now.Ticks;
                 logText("async search end");
                 Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
@@ -121,7 +121,7 @@ namespace Search
         private void FindText()
         {
             long startTime = DateTime.Now.Ticks;
-            IEnumerable<FileInfo> listFiles = searchFiles.FindText(allfiles, SearchText.Text, Path.IsSelected);
+            IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, SearchText.Text, Path.IsSelected);
             long endTime = DateTime.Now.Ticks;
 
             Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
@@ -149,8 +149,8 @@ namespace Search
         {
             ListView listViewToBePopulated = Path.IsSelected ? FileListPath : FileListName;
 
-            string filepath = ((FileInfo)listViewToBePopulated.SelectedItems[0]).FullName;
-
+            string filepath = ((FileSystemInfo)listViewToBePopulated.SelectedItems[0]).FullName;
+            
             try
             {
                 searchFiles.OpenFileInExplorer(filepath, Path.IsSelected);
