@@ -7,6 +7,6 @@ namespace Search.Interface
 {
     public interface IWatchFileChanges
     {
-        void WatchChanges(List<FileInfo> allfiles);
+        void WatchChanges(List<FileSystemInfo> allfiles);
     }
 }

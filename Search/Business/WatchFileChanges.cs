@@ -9,13 +9,15 @@ namespace Search.Business
 {
     public class WatchFileChanges: IWatchFileChanges
     {
-        public void WatchChanges(List<FileInfo> allfiles)
+        public void WatchChanges(List<FileSystemInfo> allfiles)
         {
-            foreach(var drive in DriveInfo.GetDrives())
+            string[] a = { @"C:\Publish", @"C:\ImageRight" };
+            foreach (var drive in a)
             {
                 try
                 {
-                    FileSystemWatcher watcher = new FileSystemWatcher(drive.Name)
+                    
+                    FileSystemWatcher watcher = new FileSystemWatcher(drive)
                     {
                         IncludeSubdirectories = true
                     };
@@ -38,32 +40,66 @@ namespace Search.Business
             
 
         }
-        private void Watcher_Changed(object sender, FileSystemEventArgs e, List<FileInfo> allfiles)
+        private void Watcher_Changed(object sender, FileSystemEventArgs e, List<FileSystemInfo> allfiles)
         {
-            var oldFileInfo = allfiles.FirstOrDefault(x => x.FullName == e.FullPath);
-            allfiles.Remove(oldFileInfo);
-            var newfileInfo = new FileInfo(e.FullPath);
-            allfiles.Add(newfileInfo);
+            var oldFileSystemInfo = allfiles.FirstOrDefault(x => x.FullName == e.FullPath);
+            allfiles.Remove(oldFileSystemInfo);
+            var fileAttr = File.GetAttributes(e.FullPath);
+            FileSystemInfo newFileSystemInfo;
+            if ((fileAttr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                var newFileInfo = new DirectoryInfo(e.FullPath);
+                newFileSystemInfo = (FileSystemInfo)newFileInfo;
+            }
+            else
+            {
+                var newFileInfo = new FileInfo(e.FullPath);
+                newFileSystemInfo = (FileSystemInfo)newFileInfo;
+            }
+            
+            allfiles.Add(newFileSystemInfo);
             Utils.logText(string.Format("Change: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
-        private void Watcher_Created(object sender, FileSystemEventArgs e, List<FileInfo> allfiles)
+        private void Watcher_Created(object sender, FileSystemEventArgs e, List<FileSystemInfo> allfiles)
         {
-            var newfileInfo = new FileInfo(e.FullPath);
-            allfiles.Add(newfileInfo);
+            var fileAttr = File.GetAttributes(e.FullPath);
+            FileSystemInfo newFileSystemInfo;
+            if ((fileAttr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                var newFileInfo = new DirectoryInfo(e.FullPath);
+                newFileSystemInfo = (FileSystemInfo)newFileInfo;
+            }
+            else
+            {
+                var newFileInfo = new FileInfo(e.FullPath);
+                newFileSystemInfo = (FileSystemInfo)newFileInfo;
+            }
+            allfiles.Add(newFileSystemInfo);
             Utils.logText(string.Format("Created: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
-        private void Watcher_Deleted(object sender, FileSystemEventArgs e, List<FileInfo> allfiles)
+        private void Watcher_Deleted(object sender, FileSystemEventArgs e, List<FileSystemInfo> allfiles)
         {
-            var oldFileInfo = allfiles.FirstOrDefault(x => x.FullName == e.FullPath);
-            allfiles.Remove(oldFileInfo);
+            var oldFileSystemInfo = allfiles.FirstOrDefault(x => x.FullName == e.FullPath);
+            allfiles.Remove(oldFileSystemInfo);
             Utils.logText(string.Format("Deleted: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
-        private void Watcher_Renamed(object sender, RenamedEventArgs e, List<FileInfo> allfiles)
+        private void Watcher_Renamed(object sender, RenamedEventArgs e, List<FileSystemInfo> allfiles)
         {
-            var oldFileInfo = allfiles.FirstOrDefault(x => x.FullName == e.OldFullPath);
-            allfiles.Remove(oldFileInfo);
-            var newfileInfo = new FileInfo(e.FullPath);
-            allfiles.Add(newfileInfo);
+            var oldFileSystemInfo = allfiles.FirstOrDefault(x => x.FullName == e.OldFullPath);
+            allfiles.Remove(oldFileSystemInfo);
+            var fileAttr = File.GetAttributes(e.FullPath);
+            FileSystemInfo newFileSystemInfo;
+            if ((fileAttr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                var newFileInfo = new DirectoryInfo(e.FullPath);
+                newFileSystemInfo = (FileSystemInfo)newFileInfo;
+            }
+            else
+            {
+                var newFileInfo = new FileInfo(e.FullPath);
+                newFileSystemInfo = (FileSystemInfo)newFileInfo;
+            }
+            allfiles.Add(newFileSystemInfo);
             Utils.logText(string.Format("Renamed: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
     }
