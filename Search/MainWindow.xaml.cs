@@ -22,6 +22,7 @@ namespace Search
         public List<FileSystemInfo> allfiles;
         public ISearchFiles searchFiles;
         public IWatchFileChanges watcher;
+        public ISearchRepository searchRepository;
         public string searchTextG;
         public bool isPathSelectedG;
         public bool isProcessed = true;
@@ -45,6 +46,7 @@ namespace Search
             {
                 logText("starting ScanDirectoriesAsync");
                 allfiles = searchFiles.GetFiles();
+                var node = searchRepository.GetAllTree();
                 logText("scanning done");
                 Thread findText = new Thread(new ThreadStart(FindTextInThread));
                 findText.Start();
