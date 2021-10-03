@@ -29,8 +29,8 @@
                     <ListView.View>
                         <GridView >
                             <GridViewColumn Width="250" Header="FileName" DisplayMemberBinding="{Binding Name}" />
-                            <GridViewColumn Width="600" Header="FilePath" DisplayMemberBinding="{Binding FullName}" />
-                            <GridViewColumn Width="100" Header="Size" DisplayMemberBinding="{Binding Length}" />
+                            <GridViewColumn Width="600" Header="FilePath" DisplayMemberBinding="{Binding Path}" />
+                            <GridViewColumn Width="100" Header="Size" DisplayMemberBinding="{Binding Size}" />
                         </GridView>
                     </ListView.View>
                 </ListView>

@@ -56,7 +56,7 @@ namespace Search.Business
             return node;
         }
         
-        public void ObjectChange(FileSystemInfo fileSystemInfo, FileOperations operation)
+        public void ObjectChange(FileSystemInfo fileSystemInfo, FileOperations operation, string oldName = "")
         {
             SearchNode localParent = _parentNode;
 
@@ -84,6 +84,10 @@ namespace Search.Business
             else if(operation == FileOperations.Remove)
             {
                 Remove(localParent, filePath, isFolder);
+            }
+            else if (operation == FileOperations.Rename)
+            {
+                Rename(localParent, filePath, oldName, isFolder);
             }
         }
 
@@ -169,6 +173,32 @@ namespace Search.Business
                     {
                         var itemToBeRemoved = currentNode.FileList.FirstOrDefault(x => x.Name == splitPath[i]);
                         currentNode.FileList.Remove(itemToBeRemoved);
+                    }
+                }
+                else
+                {
+                    currentNode = currentNode.DirectoryList.FirstOrDefault(x => x.Name == splitPath[i]);
+                }
+            }
+        }
+
+        public void Rename(SearchNode a, string path, string oldName, bool isFolder)
+        {
+            SearchNode currentNode = a;
+            List<string> splitPath = path.Split('/').ToList();
+            for (int i = 0; i < splitPath.Count(); i++)
+            {
+                if (i == splitPath.Count() - 1)
+                {
+                    if (isFolder)
+                    {
+                        var itemToBeRenamed = currentNode.DirectoryList.FirstOrDefault(x => x.Name == oldName);
+                        itemToBeRenamed.Name = splitPath.Last();
+                    }
+                    else
+                    {
+                        var itemToBeRenamed = currentNode.FileList.FirstOrDefault(x => x.Name == oldName);
+                        itemToBeRenamed.Name = splitPath.Last();
                     }
                 }
                 else

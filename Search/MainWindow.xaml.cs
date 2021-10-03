@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Threading;
 using Search.Interface;
+using Search.Model;
 
 namespace Search
 {
@@ -20,9 +21,12 @@ namespace Search
     public partial class MainWindow : Window
     {
         public List<FileSystemInfo> allfiles;
+        public SearchNode node;
         public ISearchFiles searchFiles;
-        public IWatchFileChanges watcher;
+        //public IWatchFileChanges watcher;
+        public IWatchTreeChanges watcher;
         public ISearchRepository searchRepository;
+        public IMapper mapper;
         public string searchTextG;
         public bool isPathSelectedG;
         public bool isProcessed = true;
@@ -30,6 +34,8 @@ namespace Search
         {
             searchFiles = new SearchFiles();
             watcher = new WatchFileChanges();
+            searchRepository = new SearchRepository();
+            mapper = new Mapper();
             InitializeComponent();
             ScanDirectoriesAsync();
 
@@ -46,18 +52,20 @@ namespace Search
             {
                 logText("starting ScanDirectoriesAsync");
                 allfiles = searchFiles.GetFiles();
-                var node = searchRepository.GetAllTree();
+                node = searchRepository.GetAllTree();
+                var vmAllFiles = mapper.ConvertToList(node);
                 logText("scanning done");
                 Thread findText = new Thread(new ThreadStart(FindTextInThread));
                 findText.Start();
                 Dispatcher.Invoke(() =>
                 {
                     statusLabel.Text = allfiles.Count.ToString() + " Objects";
-                    FileListName.ItemsSource = allfiles;
+                    FileListName.ItemsSource = vmAllFiles;
                     //SearchBtn.IsEnabled = true;
                     SearchText.IsEnabled = true;
 
-                    watcher.WatchChanges(allfiles);
+                    //watcher.WatchChanges(allfiles);
+                    watcher.WatchChanges(node);
                 });
             });
             logText("end ScanDirectoriesAsync");
@@ -88,7 +96,10 @@ namespace Search
                 logText("FindTextAsync start");
                 logText("async search start");
                 long startTime = DateTime.Now.Ticks;
-                IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
+                //IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
+
+                var fileList = searchRepository.Search(searchText_, node, "/");
+                var listFiles = mapper.ConvertToList(fileList);
                 long endTime = DateTime.Now.Ticks;
                 logText("async search end");
                 Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
@@ -143,7 +154,10 @@ namespace Search
 
         private void OnTabChanged(object sender, SelectionChangedEventArgs e)
         {
-            FindText();
+            //FindText();
+            searchTextG = SearchText.Text;
+            isPathSelectedG = Path.IsSelected;
+            isProcessed = false;
         }
 
 
