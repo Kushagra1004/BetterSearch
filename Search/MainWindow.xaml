@@ -23,31 +23,16 @@
         </Grid.RowDefinitions>
         <Label Grid.Column="1" Grid.Row="1" Content="Search Text" ></Label>
         <TextBox x:Name="SearchText"  Grid.Column="2" Grid.Row="1" TextChanged="SearchText_TextChanged" IsEnabled="False"></TextBox>
-        <TabControl Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="2" SelectionChanged="OnTabChanged">
-            <TabItem x:Name="Name"  Header="File Name">
-                <ListView x:Name="FileListName"  MouseDoubleClick="GetSelectedPath_Click" VerticalAlignment="Top">
-                    <ListView.View>
-                        <GridView >
-                            <GridViewColumn Width="250" Header="FileName" DisplayMemberBinding="{Binding Name}" />
-                            <GridViewColumn Width="600" Header="FilePath" DisplayMemberBinding="{Binding Path}" />
-                            <GridViewColumn Width="100" Header="Size" DisplayMemberBinding="{Binding Size}" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </TabItem>
-            <TabItem x:Name="Path" Header="File Path">
-                <ListView x:Name="FileListPath"  MouseDoubleClick="GetSelectedPath_Click" VerticalAlignment="Top">
-                    <ListView.View>
-                        <GridView >
-                            <GridViewColumn Width="250" Header="FileName" DisplayMemberBinding="{Binding Name}" />
-                            <GridViewColumn Width="600" Header="FilePath" DisplayMemberBinding="{Binding FullName}" />
-                            <GridViewColumn Width="100" Header="Size" DisplayMemberBinding="{Binding Length}" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </TabItem>
-        </TabControl>
-        
+        <ListView Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="2" x:Name="FileListName"  MouseDoubleClick="GetSelectedPath_Click" VerticalAlignment="Top">
+            <ListView.View>
+                <GridView >
+                    <GridViewColumn Width="250" Header="FileName" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Width="600" Header="FilePath" DisplayMemberBinding="{Binding Path}" />
+                    <GridViewColumn Width="100" Header="Size" DisplayMemberBinding="{Binding Size}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3" Background="GhostWhite" >
             <TextBlock x:Name="statusLabel" FontWeight="Bold" >Scanning: </TextBlock>
             <TextBlock x:Name="lblTotalFilesFound" FontWeight="Bold" Margin="10,0,0,0" ></TextBlock>

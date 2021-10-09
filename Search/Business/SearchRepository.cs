@@ -55,7 +55,7 @@ namespace Search.Business
 
             return node;
         }
-        
+
         public void ObjectChange(FileSystemInfo fileSystemInfo, FileOperations operation, string oldName = "")
         {
             SearchNode localParent = _parentNode;
@@ -65,7 +65,7 @@ namespace Search.Business
 
             bool isFolder = fileSystemInfo is DirectoryInfo;
             string lastItem = splitPath.LastOrDefault();
-            
+
             if (!isFolder)
             {
                 _ = splitPath.Remove(splitPath.Last());
@@ -81,7 +81,7 @@ namespace Search.Business
                     localParent = Add(localParent, lastItem, false, ((FileInfo)fileSystemInfo).Length, fileSystemInfo.LastWriteTimeUtc);
                 }
             }
-            else if(operation == FileOperations.Remove)
+            else if (operation == FileOperations.Remove)
             {
                 Remove(localParent, filePath, isFolder);
             }
@@ -93,61 +93,63 @@ namespace Search.Business
 
         public List<ViewModel> Search(string searchText, SearchNode node, string currentPath, List<ViewModel> foundPaths = null)
         {
-            
-                if (foundPaths == null)
+
+            if (foundPaths == null)
+            {
+                foundPaths = new List<ViewModel>();
+            }
+            if (node.Name == "My Computer")
+            {
+                currentPath = "";
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(currentPath))
                 {
-                    foundPaths = new List<ViewModel>();
-                }
-                if (node.Name == "My Computer")
-                {
-                    currentPath = "";
+                    currentPath = node.Name;
                 }
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(currentPath))
-                    {
-                        currentPath = node.Name;
-                    }
-                    else
-                    {
-                        currentPath = currentPath + "\\" + node.Name;
-                    }
+                    currentPath = currentPath + "\\" + node.Name;
                 }
-                if (currentPath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
+            }
+            if (currentPath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
+            {
+                var vm = new ViewModel
                 {
-                    var vm = new ViewModel
+                    Name = node.Name,
+                    Path = currentPath.Replace("My Computer/", "")
+                };
+                if (!(string.IsNullOrWhiteSpace(currentPath)))
+                {
+                    foundPaths.Add(vm);
+                    vm = null;
+                }
+            }
+            string currentFilePath = "";
+            node.FileList.ForEach(fl =>
+            {
+                currentFilePath = currentPath + "\\" + fl.Name;
+                if (currentFilePath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var vm1 = new ViewModel
                     {
-                        Name = node.Name,
-                        Path = currentPath.Replace("My Computer/", "")
+                        Name = fl.Name,
+                        Path = currentFilePath.Replace("My Computer/", ""),
+                        Size = fl.Size
                     };
-                    if (!(string.IsNullOrWhiteSpace(currentPath)))
+                    if (!(string.IsNullOrWhiteSpace(currentFilePath)))
                     {
-                        foundPaths.Add(vm);
+                        foundPaths.Add(vm1);
+                        vm1 = null;
                     }
                 }
-                string currentFilePath = "";
-                node.FileList.ForEach(fl =>
-                {
-                    currentFilePath = currentPath + "\\" + fl.Name;
-                    if (currentFilePath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        var vm1 = new ViewModel
-                        {
-                            Name = fl.Name,
-                            Path = currentFilePath.Replace("My Computer/", ""),
-                            Size = fl.Size
-                        };
-                        if (!(string.IsNullOrWhiteSpace(currentFilePath)))
-                        {
-                            foundPaths.Add(vm1);
-                        }
-                    }
-                }
-                );
+            }
+            );
+            //GC.Collect();
+            node.DirectoryList.ForEach(dl => { _ = Search(searchText, dl, currentPath, foundPaths); });
 
-                node.DirectoryList.ForEach(dl => { _ = Search(searchText, dl, currentPath, foundPaths); });
-            
-            
+
             return foundPaths;
         }
 

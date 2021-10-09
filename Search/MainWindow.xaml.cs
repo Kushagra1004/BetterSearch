@@ -28,7 +28,7 @@ namespace Search
         public ISearchRepository searchRepository;
         public IMapper mapper;
         public string searchTextG;
-        public bool isPathSelectedG;
+        //public bool isPathSelectedG;
         public bool isProcessed = true;
         public MainWindow()
         {
@@ -76,7 +76,7 @@ namespace Search
         {
             Utils.logText("SearchText_TextChanged start");
             searchTextG = SearchText.Text;
-            isPathSelectedG = Path.IsSelected;
+            //isPathSelectedG = Path.IsSelected;
             isProcessed = false;
             Utils.logText("SearchText_TextChanged end");
         }
@@ -92,7 +92,7 @@ namespace Search
                     continue;
                 }
                 string searchText_ = searchTextG;
-                bool isPathSelected_ = isPathSelectedG;
+                //bool isPathSelected_ = isPathSelectedG;
                 logText("FindTextAsync start");
                 logText("async search start");
                 long startTime = DateTime.Now.Ticks;
@@ -108,22 +108,15 @@ namespace Search
                 Dispatcher.Invoke(() =>
                 {
                     logText("updating ui");
-                    if (isPathSelected_)
-                    {
-                        FileListPath.ItemsSource = listFiles;
-                    }
-                    else
-                    {
-                        logText("updating ui2");
-                        FileListName.ItemsSource = listFiles;
-                        logText("updating ui3");
-                    }
+                    logText("updating ui2");
+                    FileListName.ItemsSource = listFiles;
+                    logText("updating ui3");
                     lblTotalFilter.Text = "Total files found for " + searchText_ + ": ";
 
                     lblTotalFilesFoundFilter.Text = totalItems_; // totalItems_;
                     logText("updating ui end for " + searchText_);
                 });
-                if (searchTextG == searchText_ && isPathSelectedG == isPathSelected_)
+                if (searchTextG == searchText_ )
                 {
                     isProcessed = true; // rare race condition, fix later
                 }
@@ -131,45 +124,20 @@ namespace Search
             }
         }
 
-        private void FindText()
-        {
-            long startTime = DateTime.Now.Ticks;
-            IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, SearchText.Text, Path.IsSelected);
-            long endTime = DateTime.Now.Ticks;
+        
 
-            Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
-            Debug.WriteLine("Time Taken to filter ticks Diff: " + (endTime - startTime));
-            if (Path.IsSelected)
-            {
-                FileListPath.ItemsSource = listFiles;
-            }
-            else
-            {
-                FileListName.ItemsSource = listFiles;
-            }
-            lblTotalFilter.Text = "Total files found: ";
-            lblTotalFilesFoundFilter.Text = listFiles.Count().ToString();
-            GC.Collect();
-        }
-
-        private void OnTabChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //FindText();
-            searchTextG = SearchText.Text;
-            isPathSelectedG = Path.IsSelected;
-            isProcessed = false;
-        }
+        
 
 
         private void GetSelectedPath_Click(object sender, MouseButtonEventArgs e)
         {
-            ListView listViewToBePopulated = Path.IsSelected ? FileListPath : FileListName;
+            ListView listViewToBePopulated = FileListName;
 
             string filepath = ((ViewModel)listViewToBePopulated.SelectedItems[0]).Path;
             
             try
             {
-                searchFiles.OpenFileInExplorer(filepath, Path.IsSelected);
+                searchFiles.OpenFileInExplorer(filepath);
             }
             catch (Exception ex)
             {
