@@ -91,11 +91,11 @@ namespace Search.Business
             }
         }
 
-        public List<string> Search(string searchText, SearchNode node, string currentPath, List<string> foundPaths = null)
+        public List<ViewModel> Search(string searchText, SearchNode node, string currentPath, List<ViewModel> foundPaths = null)
         {
             if (foundPaths == null)
             {
-                foundPaths = new List<string>();
+                foundPaths = new List<ViewModel>();
             }
             if (node.Name == "My Computer")
             {
@@ -112,21 +112,32 @@ namespace Search.Business
                     currentPath = currentPath + "\\" + node.Name;
                 }
             }
-            if (currentPath.Contains(searchText))
+            if (currentPath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(currentPath)))
+                var vm = new ViewModel
                 {
-                    foundPaths.Add(currentPath);
+                    Name = node.Name,
+                    Path = currentPath
+                };
+                if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(vm)))
+                {
+                    foundPaths.Add(vm);
                 }
             }
             string currentFilePath = "";
             node.FileList.ForEach(fl => {
                 currentFilePath = currentPath + "\\" + fl.Name;
-                if (currentFilePath.Contains(searchText))
+                if (currentFilePath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(currentPath)))
+                    var vm1 = new ViewModel
                     {
-                        foundPaths.Add(currentPath);
+                        Name = node.Name,
+                        Path = currentFilePath,
+                        Size = fl.Size
+                    };
+                    if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(vm1)))
+                    {
+                        foundPaths.Add(vm1);
                     }
                 }
             }

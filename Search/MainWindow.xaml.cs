@@ -98,8 +98,8 @@ namespace Search
                 long startTime = DateTime.Now.Ticks;
                 //IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
 
-                var fileList = searchRepository.Search(searchText_, node, "");
-                var listFiles = mapper.ConvertToList(fileList);
+                var listFiles = searchRepository.Search(searchText_, node, "");
+                //var listFiles = mapper.ConvertToList(fileList);
                 long endTime = DateTime.Now.Ticks;
                 logText("async search end");
                 Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
