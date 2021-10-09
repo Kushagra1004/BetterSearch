@@ -33,7 +33,7 @@ namespace Search.Business
             ViewModel vm = new ViewModel
             {
                 Name = node.Name,
-                Path = currentPath,
+                Path = currentPath.Replace("My Computer/", ""),
             };
             viewModels.Add(vm);
 
@@ -42,7 +42,7 @@ namespace Search.Business
                 ViewModel vm = new ViewModel
                 {
                     Name = x.Name,
-                    Path = currentPath + x.Name,
+                    Path = (currentPath + x.Name).Replace("My Computer/", ""),
                     Size = x.Size
                 };
                 viewModels.Add(vm);

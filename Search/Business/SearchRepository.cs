@@ -93,58 +93,61 @@ namespace Search.Business
 
         public List<ViewModel> Search(string searchText, SearchNode node, string currentPath, List<ViewModel> foundPaths = null)
         {
-            if (foundPaths == null)
-            {
-                foundPaths = new List<ViewModel>();
-            }
-            if (node.Name == "My Computer")
-            {
-                currentPath = "";
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(currentPath))
+            
+                if (foundPaths == null)
                 {
-                    currentPath = node.Name;
+                    foundPaths = new List<ViewModel>();
+                }
+                if (node.Name == "My Computer")
+                {
+                    currentPath = "";
                 }
                 else
                 {
-                    currentPath = currentPath + "\\" + node.Name;
-                }
-            }
-            if (currentPath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
-            {
-                var vm = new ViewModel
-                {
-                    Name = node.Name,
-                    Path = currentPath
-                };
-                if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(vm)))
-                {
-                    foundPaths.Add(vm);
-                }
-            }
-            string currentFilePath = "";
-            node.FileList.ForEach(fl => {
-                currentFilePath = currentPath + "\\" + fl.Name;
-                if (currentFilePath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    var vm1 = new ViewModel
+                    if (string.IsNullOrWhiteSpace(currentPath))
                     {
-                        Name = node.Name,
-                        Path = currentFilePath,
-                        Size = fl.Size
-                    };
-                    if (!(string.IsNullOrWhiteSpace(currentFilePath) || foundPaths.Contains(vm1)))
+                        currentPath = node.Name;
+                    }
+                    else
                     {
-                        foundPaths.Add(vm1);
+                        currentPath = currentPath + "\\" + node.Name;
                     }
                 }
-            }
-            );
+                if (currentPath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var vm = new ViewModel
+                    {
+                        Name = node.Name,
+                        Path = currentPath.Replace("My Computer/", "")
+                    };
+                    if (!(string.IsNullOrWhiteSpace(currentPath)))
+                    {
+                        foundPaths.Add(vm);
+                    }
+                }
+                string currentFilePath = "";
+                node.FileList.ForEach(fl =>
+                {
+                    currentFilePath = currentPath + "\\" + fl.Name;
+                    if (currentFilePath.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var vm1 = new ViewModel
+                        {
+                            Name = fl.Name,
+                            Path = currentFilePath.Replace("My Computer/", ""),
+                            Size = fl.Size
+                        };
+                        if (!(string.IsNullOrWhiteSpace(currentFilePath)))
+                        {
+                            foundPaths.Add(vm1);
+                        }
+                    }
+                }
+                );
 
-            node.DirectoryList.ForEach(dl => { _ = Search(searchText, dl, currentPath, foundPaths); });
-
+                node.DirectoryList.ForEach(dl => { _ = Search(searchText, dl, currentPath, foundPaths); });
+            
+            
             return foundPaths;
         }
 

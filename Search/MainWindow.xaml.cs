@@ -165,7 +165,7 @@ namespace Search
         {
             ListView listViewToBePopulated = Path.IsSelected ? FileListPath : FileListName;
 
-            string filepath = ((FileSystemInfo)listViewToBePopulated.SelectedItems[0]).FullName;
+            string filepath = ((ViewModel)listViewToBePopulated.SelectedItems[0]).Path;
             
             try
             {
