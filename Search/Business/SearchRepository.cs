@@ -135,7 +135,7 @@ namespace Search.Business
                         Path = currentFilePath,
                         Size = fl.Size
                     };
-                    if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(vm1)))
+                    if (!(string.IsNullOrWhiteSpace(currentFilePath) || foundPaths.Contains(vm1)))
                     {
                         foundPaths.Add(vm1);
                     }
