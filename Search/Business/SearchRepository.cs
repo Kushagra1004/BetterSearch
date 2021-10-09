@@ -61,7 +61,7 @@ namespace Search.Business
             SearchNode localParent = _parentNode;
 
             string filePath = fileSystemInfo.FullName;
-            List<string> splitPath = filePath.Split('/').ToList();
+            List<string> splitPath = filePath.Split("\\").ToList();
 
             bool isFolder = fileSystemInfo is DirectoryInfo;
             string lastItem = splitPath.LastOrDefault();
@@ -97,17 +97,37 @@ namespace Search.Business
             {
                 foundPaths = new List<string>();
             }
-            currentPath = currentPath + "/" + node.Name;
+            if (node.Name == "My Computer")
+            {
+                currentPath = "";
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(currentPath))
+                {
+                    currentPath = node.Name;
+                }
+                else
+                {
+                    currentPath = currentPath + "\\" + node.Name;
+                }
+            }
             if (currentPath.Contains(searchText))
             {
-                foundPaths.Add(currentPath);
+                if (!foundPaths.Contains(currentPath))
+                {
+                    foundPaths.Add(currentPath);
+                }
             }
             string currentFilePath = "";
             node.FileList.ForEach(fl => {
-                currentFilePath = currentPath + "/" + fl.Name;
+                currentFilePath = currentPath + "\\" + fl.Name;
                 if (currentFilePath.Contains(searchText))
                 {
-                    foundPaths.Add(currentPath);
+                    if (!foundPaths.Contains(currentPath))
+                    {
+                        foundPaths.Add(currentPath);
+                    }
                 }
             }
             );
@@ -121,7 +141,7 @@ namespace Search.Business
         {
             if (isFolder)
             {
-                SearchNode tempNode = a.DirectoryList.First(x => x.Name == path);
+                SearchNode tempNode = a.DirectoryList.FirstOrDefault(x => x.Name == path);
                 if (tempNode != null)
                 {
                     return tempNode;
@@ -159,7 +179,7 @@ namespace Search.Business
         public void Remove(SearchNode a, string path, bool isFolder)
         {
             SearchNode currentNode = a;
-            List<string> splitPath = path.Split('/').ToList();
+            List<string> splitPath = path.Split("\\").ToList();
             for (int i = 0; i < splitPath.Count(); i++)
             {
                 if (i == splitPath.Count() - 1)
@@ -185,7 +205,7 @@ namespace Search.Business
         public void Rename(SearchNode a, string path, string oldName, bool isFolder)
         {
             SearchNode currentNode = a;
-            List<string> splitPath = path.Split('/').ToList();
+            List<string> splitPath = path.Split("\\").ToList();
             for (int i = 0; i < splitPath.Count(); i++)
             {
                 if (i == splitPath.Count() - 1)

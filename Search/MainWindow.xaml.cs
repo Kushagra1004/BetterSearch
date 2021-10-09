@@ -51,7 +51,7 @@ namespace Search
             await Task.Run(() =>
             {
                 logText("starting ScanDirectoriesAsync");
-                allfiles = searchFiles.GetFiles();
+                //allfiles = searchFiles.GetFiles();
                 node = searchRepository.GetAllTree();
                 var vmAllFiles = mapper.ConvertToList(node);
                 logText("scanning done");
@@ -59,7 +59,7 @@ namespace Search
                 findText.Start();
                 Dispatcher.Invoke(() =>
                 {
-                    statusLabel.Text = allfiles.Count.ToString() + " Objects";
+                    statusLabel.Text = vmAllFiles.Count.ToString() + " Objects";
                     FileListName.ItemsSource = vmAllFiles;
                     //SearchBtn.IsEnabled = true;
                     SearchText.IsEnabled = true;
@@ -98,7 +98,7 @@ namespace Search
                 long startTime = DateTime.Now.Ticks;
                 //IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, searchText_, isPathSelected_);
 
-                var fileList = searchRepository.Search(searchText_, node, "/");
+                var fileList = searchRepository.Search(searchText_, node, "");
                 var listFiles = mapper.ConvertToList(fileList);
                 long endTime = DateTime.Now.Ticks;
                 logText("async search end");
