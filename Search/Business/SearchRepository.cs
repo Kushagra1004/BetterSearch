@@ -114,7 +114,7 @@ namespace Search.Business
             }
             if (currentPath.Contains(searchText))
             {
-                if (!foundPaths.Contains(currentPath))
+                if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(currentPath)))
                 {
                     foundPaths.Add(currentPath);
                 }
@@ -124,7 +124,7 @@ namespace Search.Business
                 currentFilePath = currentPath + "\\" + fl.Name;
                 if (currentFilePath.Contains(searchText))
                 {
-                    if (!foundPaths.Contains(currentPath))
+                    if (!(string.IsNullOrWhiteSpace(currentPath) || foundPaths.Contains(currentPath)))
                     {
                         foundPaths.Add(currentPath);
                     }
