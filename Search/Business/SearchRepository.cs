@@ -27,15 +27,17 @@ namespace Search.Business
                 List<FileSystemInfo> _currentDirFiles = new List<FileSystemInfo>();
                 try
                 {
-                    DirectoryInfo di = new DirectoryInfo(drive.Name);
-                    //DirectoryInfo di = new DirectoryInfo("E://");
+                    //DirectoryInfo di = new DirectoryInfo(drive.Name);
+                    DirectoryInfo di = new DirectoryInfo("D://temp//");
                     Utils.logText("Scanning: " + drive.Name);
                     _currentDirFiles = di.EnumerateFileSystemInfos("*", new EnumerationOptions
                     {
                         IgnoreInaccessible = true,
                         RecurseSubdirectories = true
                     }).ToList();
-                    _currentDirFiles.ForEach(x => ObjectChange(x, FileOperations.Add));
+                    
+                    _currentDirFiles.ForEach(x => ObjectChange(new FileModel(x), FileOperations.Add));
+                    
                 }
                 catch (Exception e)
                 {
@@ -45,25 +47,75 @@ namespace Search.Business
                 string fileCount = _currentDirFiles.Where(x => x is FileInfo).Count().ToString();
                 string folderCount = _currentDirFiles.Where(x => x is DirectoryInfo).Count().ToString();
                 string totalCount = _currentDirFiles.Count().ToString();
+                int sizec = 0;
+                _currentDirFiles.ForEach(x => sizec += x.FullName.Length);
                 Utils.logText("Scanned drive " + drive.Name +
                                 " with fileCount : " + fileCount +
                                 " with folderCount : " + folderCount +
                                 " with totalCount : " + totalCount +
+                                " with size : " + sizec +
                                 " in ms " + ((endTime - startTime) / 10000) + "ms");
-                //break;
+                break;
             }
 
             return node;
         }
-        
-        public void ObjectChange(FileSystemInfo fileSystemInfo, FileOperations operation, string oldName = "")
+
+        public SearchNode GetAllTreeFake()
+        {
+            var startTime = DateTime.Now.Ticks;
+            SearchNode node = _parentNode;
+            List<FileModel> _currentDirFiles = new List<FileModel>();
+            _currentDirFiles = Utils.loadFakeData();
+            //_currentDirFiles.ForEach(x => ObjectChange(x, FileOperations.Add));
+            var endTime = DateTime.Now.Ticks;
+            string fileCount = _currentDirFiles.Where(x => !x.isDirectory()).Count().ToString();
+            string folderCount = _currentDirFiles.Where(x => x.isDirectory()).Count().ToString();
+            string totalCount = _currentDirFiles.Count().ToString();
+            int sizec = 0;
+            _currentDirFiles.ForEach(x => sizec += x.FullName.Length);
+            Utils.logText("Scanned fake \n" +
+                            " \nwith fileCount : " + fileCount +
+                            " \nwith folderCount : " + folderCount +
+                            " \nwith totalCount : " + totalCount +
+                            " \nwith size : " + sizec/1024/1024 +
+                            " \nin ms " + ((endTime - startTime) / 10000) + "ms");
+
+            return node;
+        }
+
+        public List<FileModel> GetAllTreeFakeList()
+        {
+            var startTime = DateTime.Now.Ticks;
+            SearchNode node = _parentNode;
+            List<FileModel> _currentDirFiles = new List<FileModel>();
+            _currentDirFiles = Utils.loadFakeData();
+            //_currentDirFiles.ForEach(x => ObjectChange(x, FileOperations.Add));
+            var endTime = DateTime.Now.Ticks;
+            string fileCount = _currentDirFiles.Where(x => !x.isDirectory()).Count().ToString();
+            string folderCount = _currentDirFiles.Where(x => x.isDirectory()).Count().ToString();
+            string totalCount = _currentDirFiles.Count().ToString();
+            int sizec = 0;
+            _currentDirFiles.ForEach(x => sizec += x.FullName.Length);
+            Utils.logText("Scanned fake \n" +
+                            " \nwith fileCount : " + fileCount +
+                            " \nwith folderCount : " + folderCount +
+                            " \nwith totalCount : " + totalCount +
+                            " \nwith size : " + sizec / 1024 / 1024 +
+                            " \nin ms " + ((endTime - startTime) / 10000) + "ms");
+
+            return _currentDirFiles;
+        }
+
+
+        public void ObjectChange(FileModel fileModel, FileOperations operation, string oldName = "")
         {
             SearchNode localParent = _parentNode;
 
-            string filePath = fileSystemInfo.FullName;
+            string filePath = fileModel.FullName;
             List<string> splitPath = filePath.Split("\\").ToList();
 
-            bool isFolder = fileSystemInfo is DirectoryInfo;
+            bool isFolder = fileModel.isDirectory();
             string lastItem = splitPath.LastOrDefault();
             
             if (!isFolder)
@@ -74,11 +126,11 @@ namespace Search.Business
             {
                 foreach (string obj in splitPath)
                 {
-                    localParent = Add(localParent, obj, true, 0, fileSystemInfo.LastWriteTimeUtc);
+                    localParent = Add(localParent, obj, true, 0, fileModel.LastWriteTimeUtc);
                 }
                 if (!isFolder)
                 {
-                    localParent = Add(localParent, lastItem, false, ((FileInfo)fileSystemInfo).Length, fileSystemInfo.LastWriteTimeUtc);
+                    localParent = Add(localParent, lastItem, false, fileModel.Length, fileModel.LastWriteTimeUtc);
                 }
             }
             else if(operation == FileOperations.Remove)
@@ -93,6 +145,7 @@ namespace Search.Business
 
         public List<ViewModel> Search(string searchText, SearchNode node, string currentPath, List<ViewModel> foundPaths = null)
         {
+           
             
                 if (foundPaths == null)
                 {

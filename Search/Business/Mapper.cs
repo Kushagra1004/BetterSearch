@@ -17,11 +17,11 @@ namespace Search.Business
             searchRepository = new SearchRepository();
             _parentNode = SearchNode.GetTree();
         }
-        public SearchNode ConvertToTree(List<FileSystemInfo> fileList)
-        {
-            fileList.ForEach(x => searchRepository.ObjectChange(x, FileOperations.Add));
-            return _parentNode;
-        }
+        //public SearchNode ConvertToTree(List<FileSystemInfo> fileList)
+        //{
+        //    fileList.ForEach(x => searchRepository.ObjectChange(x, FileOperations.Add));
+        //    return _parentNode;
+        //}
 
         public List<ViewModel> ConvertToList(SearchNode node, List<ViewModel> viewModels = null, string currentPath = "")
         {

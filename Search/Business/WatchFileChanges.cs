@@ -156,8 +156,8 @@ namespace Search.Business
                 var newFileInfo = new FileInfo(e.FullPath);
                 newFileSystemInfo = (FileSystemInfo)newFileInfo;
             }
-            searchRepository.ObjectChange(newFileSystemInfo, FileOperations.Remove);
-            searchRepository.ObjectChange(newFileSystemInfo, FileOperations.Add);
+            searchRepository.ObjectChange(new FileModel(newFileSystemInfo), FileOperations.Remove);
+            searchRepository.ObjectChange(new FileModel(newFileSystemInfo), FileOperations.Add);
             Utils.logText(string.Format("Change: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
         private void Watcher_Created(object sender, FileSystemEventArgs e, SearchNode node)
@@ -174,7 +174,7 @@ namespace Search.Business
                 var newFileInfo = new FileInfo(e.FullPath);
                 newFileSystemInfo = (FileSystemInfo)newFileInfo;
             }
-            searchRepository.ObjectChange(newFileSystemInfo, FileOperations.Add);
+            searchRepository.ObjectChange(new FileModel(newFileSystemInfo), FileOperations.Add);
         }
         private void Watcher_Deleted(object sender, FileSystemEventArgs e, SearchNode node)
         {
@@ -190,7 +190,7 @@ namespace Search.Business
                 var oldFileInfo = new FileInfo(e.FullPath);
                 oldFileSystemInfo = (FileSystemInfo)oldFileInfo;
             }
-            searchRepository.ObjectChange(oldFileSystemInfo, FileOperations.Remove);
+            searchRepository.ObjectChange(new FileModel(oldFileSystemInfo), FileOperations.Remove);
             Utils.logText(string.Format("Deleted: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
         private void Watcher_Renamed(object sender, RenamedEventArgs e, SearchNode node)
@@ -207,7 +207,7 @@ namespace Search.Business
                 var newFileInfo = new FileInfo(e.FullPath);
                 newFileSystemInfo = (FileSystemInfo)newFileInfo;
             }
-            searchRepository.ObjectChange(newFileSystemInfo, FileOperations.Rename, e.OldName);
+            searchRepository.ObjectChange(new FileModel(newFileSystemInfo), FileOperations.Rename, e.OldName);
             Utils.logText(string.Format("Renamed: {0}, File: {1}", e.ChangeType, e.FullPath));
         }
     }

@@ -20,7 +20,7 @@ namespace Search
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<FileSystemInfo> allfiles;
+        //public List<FileSystemInfo> allfiles;
         public SearchNode node;
         public ISearchFiles searchFiles;
         //public IWatchFileChanges watcher;
@@ -30,33 +30,43 @@ namespace Search
         public string searchTextG;
         public bool isPathSelectedG;
         public bool isProcessed = true;
+        public List<FileModel> allfiles2;
+        //public MainWindow()
+        //{
+        //    searchFiles = new SearchFiles();
+        //    watcher = new WatchFileChanges();
+        //    searchRepository = new SearchRepository();
+        //    mapper = new Mapper();
+        //    InitializeComponent();
+        //    ScanDirectoriesAsync();
+            
+        //    //WatchChanges();
+        //}
+
         public MainWindow()
         {
-            searchFiles = new SearchFiles();
-            watcher = new WatchFileChanges();
             searchRepository = new SearchRepository();
-            mapper = new Mapper();
-            InitializeComponent();
-            ScanDirectoriesAsync();
-
-            //WatchChanges();
+            allfiles2 =  searchRepository.GetAllTreeFakeList();
+            allfiles2 = null;
+            GC.Collect();
         }
 
-        
 
 
         private async void ScanDirectoriesAsync()
         {
-            allfiles = new List<FileSystemInfo>();
+            //allfiles = new List<FileSystemInfo>();
             await Task.Run(() =>
             {
                 logText("starting ScanDirectoriesAsync");
                 //allfiles = searchFiles.GetFiles();
-                node = searchRepository.GetAllTree();
+                //node = searchRepository.GetAllTree();
+                node = searchRepository.GetAllTreeFake();
                 var vmAllFiles = mapper.ConvertToList(node);
                 logText("scanning done");
                 Thread findText = new Thread(new ThreadStart(FindTextInThread));
                 findText.Start();
+                GC.Collect();
                 Dispatcher.Invoke(() =>
                 {
                     statusLabel.Text = vmAllFiles.Count.ToString() + " Objects";
@@ -131,26 +141,26 @@ namespace Search
             }
         }
 
-        private void FindText()
-        {
-            long startTime = DateTime.Now.Ticks;
-            IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, SearchText.Text, Path.IsSelected);
-            long endTime = DateTime.Now.Ticks;
+        //private void FindText()
+        //{
+        //    long startTime = DateTime.Now.Ticks;
+        //    IEnumerable<FileSystemInfo> listFiles = searchFiles.FindText(allfiles, SearchText.Text, Path.IsSelected);
+        //    long endTime = DateTime.Now.Ticks;
 
-            Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
-            Debug.WriteLine("Time Taken to filter ticks Diff: " + (endTime - startTime));
-            if (Path.IsSelected)
-            {
-                FileListPath.ItemsSource = listFiles;
-            }
-            else
-            {
-                FileListName.ItemsSource = listFiles;
-            }
-            lblTotalFilter.Text = "Total files found: ";
-            lblTotalFilesFoundFilter.Text = listFiles.Count().ToString();
-            GC.Collect();
-        }
+        //    Debug.WriteLine("Time Taken to filter: " + ((endTime - startTime) / 10000) + "ms");
+        //    Debug.WriteLine("Time Taken to filter ticks Diff: " + (endTime - startTime));
+        //    if (Path.IsSelected)
+        //    {
+        //        FileListPath.ItemsSource = listFiles;
+        //    }
+        //    else
+        //    {
+        //        FileListName.ItemsSource = listFiles;
+        //    }
+        //    lblTotalFilter.Text = "Total files found: ";
+        //    lblTotalFilesFoundFilter.Text = listFiles.Count().ToString();
+        //    GC.Collect();
+        //}
 
         private void OnTabChanged(object sender, SelectionChangedEventArgs e)
         {

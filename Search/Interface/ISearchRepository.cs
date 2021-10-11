@@ -7,7 +7,9 @@ namespace Search.Interface
     public interface ISearchRepository
     {
         SearchNode GetAllTree();
-        void ObjectChange(FileSystemInfo fileSystemInfo, FileOperations fileOperations, string oldName = "");
+        SearchNode GetAllTreeFake();
+        List<FileModel> GetAllTreeFakeList();
+        void ObjectChange(FileModel fileModel, FileOperations fileOperations, string oldName = "");
         List<ViewModel> Search(string searchText, SearchNode node, string currentPath, List<ViewModel> foundPaths = null);
     }
 }
